@@ -1,0 +1,37 @@
+mode all
+
+profile none
+BLACK_LEVEL_TUNER_UPDATE
+   enable: 1
+   bl_source: PARAMS
+   BLACK_LEVEL_NORMAL
+      threshold: 128
+      abscissae_r:   0 200 201 65535 *
+      ordinates_r:   0  0 8191 8191 *
+      abscissae_gr:  0 67 1023 65535 *
+      ordinates_gr:  0 0  8191 8191 *
+      abscissae_gb:  0 67 1023 65535 *
+      ordinates_gb:  0 0  8191 8191 *
+      abscissae_b:   0 66 1023 65535 *
+      ordinates_b:   0 0  8191 8191 *
+   END
+END
+
+end_profile
+
+
+profile all
+
+AGC_UPDATE
+#y_targ_mod_hist_pt: 0
+
+ y_target:
+ 0 10
+ 7000 10
+ 65535 10
+ *
+
+END
+
+end_profile
+

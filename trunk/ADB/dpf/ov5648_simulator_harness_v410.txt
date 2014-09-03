@@ -1,0 +1,133 @@
+# Simulator harness for OV5648 sensor
+
+#
+# raw header type.  specify "none" if your data has no header, and fill in the CAMERA_MODE block below.
+name: BROADCOM
+bits_per_pixel: 16
+
+
+#
+# Include the common settings between PC sim and VC target
+#
+include "ov5648_settings_v410.txt"
+
+mode still
+mode video
+mode all
+
+#
+# This is the output conversion from YUV to FGB for simulation BMP file.
+# Target would use coeffs to suit the real application demand.
+#
+CONVERSION
+   matrix:
+      8.000 14.192 0.000
+      8.000 -2.712 -5.720
+      8.000 0.000 11.200
+   offsets: -58064 34676 -45940
+END
+
+#
+# Initial vale of digital gain, over-ridden by AGC if enabled.
+#
+GAIN                    # global gain applied to all colours and offsets
+   gain: 1.0  
+   offset_r: 0
+   offset_g: 0
+   offset_b: 0
+   threshold: 8191
+END
+
+#
+# Initial vale of white balance, over-ridden by AWB if enabled
+#
+WHITE_BALANCE           # gives R and B gain relative to G
+   gain_r: 1.0
+   gain_b: 1.0
+END
+
+mode still
+
+FRAME_UPDATE
+   width: 2592
+   height: 1944
+   bayer_order: BGGR
+	sw_in_pos: AFTER_DEFPIX_PROG
+	sw_out_pos: AFTER_DEFPIX_PROG
+END
+     
+# the CAMERA_MODE paramters allow the simulator to know the cdi_mode paramters which are normally contained in the RAW header.
+# Reading a RAW header of type BROADCOM will over-ride these defaults.     
+CAMERA_MODE
+   name: still
+   tuner_stills_mode_name: still
+   width: 2592
+   height: 1944
+   padding_right: 2
+   padding_down: 2
+   line_length: 40895
+   frame_length: 1944
+   data_size: 0x9b3400
+   framerate_lo: 0.1
+   framerate_hi: 24.0
+   par_x: 1
+   par_y: 1
+   transform: NONE *
+   format: BAYER
+   bayer_order: BGGR
+   bayer_format: RAW16
+   interlace_fields: 1
+   first_field: 0
+   periph_dec: NONE
+   periph_enc: NONE_8
+   embedded_data: NONE
+   flags: STILL *
+   clocking_mode: STROBE
+   full_frame_width:  2592
+   full_frame_height: 1944
+   sensor_crop_left: 0
+   sensor_crop_right: 0
+   sensor_crop_top: 0
+   sensor_crop_bottom: 0
+   data_width: 16
+   scale_h: 1.0
+   scale_v: 1.0
+END
+
+IMAGE_INPUT
+   format: RAW16
+   stride: 5184
+END
+
+HRESIZE
+   interp_filter_mode: BICUBIC
+   input_offset_x: 0
+   input_offset_y: 0
+   input_width: 2592
+   input_height: 1944
+   output_width: 2592
+   output_height: 1944
+END
+
+HI_RES_OUTPUT
+   shift: 8
+   data_format: INTERLEAVED
+   output_width: 0
+END
+
+LRESIZE
+   output_width: 2592
+   output_height: 1944
+   shift: 3
+END
+
+LO_RES_OUTPUT
+   shift: 8
+   data_format: 420
+   output_width: 0      # byte output per sample
+END
+
+
+
+#put this here so anything concatenated to this file will affect all modes, unless the mode is explicitly changed...
+mode all
